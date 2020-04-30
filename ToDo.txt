@@ -1,0 +1,44 @@
+"ROOM.ID","ROOM.NAME","ROOM.BUILDINGID_BUILDING_NAME"
+
+RichField:
+string Description,
+string FullName,
+string TableName,
+string Name,
+string JointFullName,
+string JointTableName,
+string JointName
+
+Select:
+
+From:
+
+
+ISerialization:
+public string Serialize(object value)
+public object Deserialize(string value)
+
+IDatabaseInteraction:
+public object ExecuteSql(string sql)
+
+IQueryBuilder:
+public RichField ConvertToRichField(string name)
+public RichField ConvertToRichField(string[] names)
+public SelectAndFrom BuildSelectAndFrom(IEnumerable<RichField> richFields)
+public string BuildQuery(int id, IEnumerable<RichField> richField)
+
+IDatabaseInteraction dbInteraction = this.dbInteractionProvider;
+IQueryBuilder queryBuilder = this.QueryBuilder;
+ISerialization serializer = this.Serializer;
+
+string[] fields = new string[]{
+	"ROOM.ID"
+};
+
+List<RichField> richFields = queryBuilder.ConvertToRichField(fields)
+
+string sql = queryBuilder.BuildQuery(100, richFields);
+
+object result = dbInteractionProvider.ExecuteSql(sql);
+
+string json = serializer.Serialize(result);
