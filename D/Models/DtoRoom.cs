@@ -12,6 +12,5 @@ namespace D.Models
         public int Floor { get; set; }
         public int Capacity { get; set; }
         public DtoBuilding Building { get; set; }
-        public ICollection<Class> Classes { get; set; }
     }
 }

@@ -2,14 +2,22 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Text;
 
 namespace D.Models.Interfaces
 {
     public class QueryBuilder : IQueryBuilder
     {
+        public IDatabaseGossiper DatabaseGossiper;
+
+        public QueryBuilder(IDatabaseGossiper databaseGossiper)
+        {
+            this.DatabaseGossiper = databaseGossiper;
+        }
+
         public AnalyticField ConvertToRichField(string description)
         {
-            var descriptionSplitOnUnderscore = description.Split('_');
+            var descriptionSplitOnUnderscore = description.Split(new[]{ '_' }, 2);
             var fullName = descriptionSplitOnUnderscore[0];
             var fullNameSplitOnDot = fullName.Split('.');
             var tableName = fullNameSplitOnDot[0];
@@ -33,9 +41,65 @@ namespace D.Models.Interfaces
             };
         }
 
+        public string BuildBasicQuery(IEnumerable<string> descriptions)
+        {
+            List<AnalyticField> analyticFields = new List<AnalyticField>();
+
+            foreach(string description in descriptions)
+            {
+                analyticFields.Add(ConvertToRichField(description));
+            }
+
+            return BuildBasicQuery(analyticFields);
+        }
+
         public string BuildBasicQuery(IEnumerable<AnalyticField> fields)
         {
-            throw new NotImplementedException();
+            StringBuilder sbSelectClause = new StringBuilder();
+            StringBuilder sbFromClause = new StringBuilder();
+
+            sbSelectClause.AppendLine(" select ");
+            sbFromClause.AppendLine(" from rooms ");
+
+            var descriptionsHistory = new List<string>();
+            var namesHistory = new List<string>();
+            var jointsHistory = new List<string>();
+
+            foreach (AnalyticField field in fields)
+            {
+                var joinRequired = !string.IsNullOrEmpty(field.JointTableName);
+
+                if (descriptionsHistory.Contains(field.Description))
+                {
+                    break;
+                }
+
+                descriptionsHistory.Add(field.Description);
+
+                if (!namesHistory.Contains(field.FullName))
+                {
+                    namesHistory.Add(field.FullName);
+                    sbSelectClause.AppendLine(field.FullName + " as [" + field.Description + "], ");
+                }
+
+                if (joinRequired)
+                {
+                    var jointAlias = field.JointTableName + "_ON_" + field.Name;
+
+                    if (!jointsHistory.Contains(jointAlias))
+                    {
+                        jointsHistory.Add(jointAlias);
+
+                        sbFromClause.AppendLine(" left outer join " + field.JointTableName + " " + jointAlias + " on rooms." + field.Name + " = " + jointAlias + "." + this.DatabaseGossiper.GetColumnToJoinOn("Room", "Building"));
+                    }                   
+
+                    sbSelectClause.AppendLine(jointAlias + "." + field.JointName + " as [" + field.Description + "], ");                    
+                }
+            }
+
+            sbSelectClause.AppendLine(" 1 ");
+
+            return sbSelectClause.ToString() + sbFromClause.ToString();
         }
     }
 }

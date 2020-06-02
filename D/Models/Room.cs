@@ -15,5 +15,8 @@ namespace D.Models
 
         public int BuildingId { get; set; }
         public virtual Building Building { get; set; }
+
+        public int AlternateBuildingId { get; set; }
+        public virtual Building AlternateBuilding { get; set; }
     }
 }

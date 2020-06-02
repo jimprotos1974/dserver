@@ -12,5 +12,6 @@ namespace D.Models
         public string Address { get; set; }
 
         public virtual ICollection<Room> Rooms { get; set; }
+        public virtual ICollection<Room> AlternateRooms { get; set; }
     }
 }

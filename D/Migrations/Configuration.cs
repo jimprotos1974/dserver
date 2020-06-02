@@ -27,12 +27,6 @@ namespace D.Migrations
             //    );
             //
 
-            context.Countries.AddOrUpdate(
-                p => p.Id,
-                new Models.Country { Code = "GR", Name = "Greece" },
-                new Models.Country { Code = "BR", Name = "Britain" }
-                );
-
         }
     }
 }

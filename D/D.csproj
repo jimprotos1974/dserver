@@ -164,42 +164,31 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
-    <Compile Include="Controllers\BuildingsController.cs" />
-    <Compile Include="Controllers\ClassesController.cs" />
-    <Compile Include="Controllers\RoomsController.cs" />
-    <Compile Include="Controllers\StudentsController.cs" />
+    <Compile Include="Controllers\MenuController.cs" />
     <Compile Include="Controllers\TeachersController.cs" />
+    <Compile Include="Controllers\ValuesController1.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202002071217553_d001.cs" />
-    <Compile Include="Migrations\202002071217553_d001.Designer.cs">
-      <DependentUpon>202002071217553_d001.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202002071251596_d003.cs" />
-    <Compile Include="Migrations\202002071251596_d003.Designer.cs">
-      <DependentUpon>202002071251596_d003.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202002071257194_d004.cs" />
-    <Compile Include="Migrations\202002071257194_d004.Designer.cs">
-      <DependentUpon>202002071257194_d004.cs</DependentUpon>
+    <Compile Include="Migrations\202005061059457_001.cs" />
+    <Compile Include="Migrations\202005061059457_001.Designer.cs">
+      <DependentUpon>202005061059457_001.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AnalyticField.cs" />
     <Compile Include="Models\Building.cs" />
-    <Compile Include="Models\Class.cs" />
-    <Compile Include="Models\Country.cs" />
     <Compile Include="Models\DContext.cs" />
     <Compile Include="Models\DtoRoom.cs" />
     <Compile Include="Models\DtoBuilding.cs" />
+    <Compile Include="Models\Interfaces\DatabaseCommander.cs" />
+    <Compile Include="Models\Interfaces\DatabaseGossiper.cs" />
     <Compile Include="Models\Interfaces\IDatabaseCommander.cs" />
+    <Compile Include="Models\Interfaces\IDatabaseGossiper.cs" />
     <Compile Include="Models\Interfaces\IQueryBuilder.cs" />
     <Compile Include="Models\Interfaces\ISerializer.cs" />
+    <Compile Include="Models\Interfaces\NavigableDbContext.cs" />
     <Compile Include="Models\Interfaces\QueryBuilder.cs" />
     <Compile Include="Models\Room.cs" />
-    <Compile Include="Models\Teacher.cs" />
-    <Compile Include="Models\Student.cs" />
-    <Compile Include="Models\Person.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -286,14 +275,8 @@
     <Content Include="Scripts\jquery-3.3.1.min.map" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202002071217553_d001.resx">
-      <DependentUpon>202002071217553_d001.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202002071251596_d003.resx">
-      <DependentUpon>202002071251596_d003.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202002071257194_d004.resx">
-      <DependentUpon>202002071257194_d004.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202005061059457_001.resx">
+      <DependentUpon>202005061059457_001.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

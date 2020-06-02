@@ -19,7 +19,7 @@ namespace D.Controllers
     {
         private DContext db = new DContext();
 
-        private void getXQuery(IEnumerable<string> fields)
+        private object test(IEnumerable<string> fields)
         {
             System.Text.StringBuilder sbSelect = new System.Text.StringBuilder();
             System.Text.StringBuilder sbFrom = new System.Text.StringBuilder();
@@ -28,149 +28,39 @@ namespace D.Controllers
             sbFrom.Append(" FROM ");
 
             fields = new List<string>(){
-                "ROOM.ID",
-                "ROOM.NAME",
-                "ROOM.BUILDINGID_BUILDING_NAME"
+                "ROOMS.ID",
+                "ROOMS.NAME",
+                "ROOMS.BUILDINGID",
+                "ROOMS.BUILDINGID_BUILDINGS_NAME",
+                "ROOMS.BUILDINGID_BUILDINGS_ADDRESS",
+                "ROOMS.ALTERNATEBUILDINGID",
+                "ROOMS.ALTERNATEBUILDINGID_BUILDINGS_NAME",
+                "ROOMS.ALTERNATEBUILDINGID_BUILDINGS_ADDRESS"
             };
 
-            foreach(string description in fields)
-            {
-                var aDescriptionSplitOnUnderscore = description.Split('_');
-                var aFullName = aDescriptionSplitOnUnderscore[0];
-                var aFullNameSplitOnDot = aFullName.Split('.');
-                var aTableName = aFullNameSplitOnDot[0];
-                var aFieldName = aFullNameSplitOnDot[1];
-                /*ar aJointDescription = aDescriptionSplitOnUnderscore[1];
-                var hasJointDescription = !String.IsNullOrEmpty(aJointDescription);
-                var aJointDescriptionSplitOnUnderscore = hasJointDescription ? aJointDescription.Split('_') : null;
-                var aJointTable = hasJointDescription ? aJointDescriptionSplitOnUnderscore[0] : null;
-                var aJointField = hasJointDescription ? aJointDescriptionSplitOnUnderscore[1] : null;*/
+            D.Models.Interfaces.NavigableDbContext navigableDbContext = new Models.Interfaces.NavigableDbContext(db);
 
-                sbSelect.Append(" ," + aFullName + " ");
+            D.Models.Interfaces.DatabaseGossiper databaseGossiper = new Models.Interfaces.DatabaseGossiper(navigableDbContext);
 
-                if (true)
-                {
-                    var foreignKeys = db.GetForeignKeyProperties<Room>();
-                }
-            }
+            D.Models.Interfaces.QueryBuilder qb = new D.Models.Interfaces.QueryBuilder(databaseGossiper);
+
+            var q = qb.BuildBasicQuery(fields);
+
+            D.Models.Interfaces.DatabaseCommander dc = new Models.Interfaces.DatabaseCommander();
+
+            db.Database.SqlQuery<object>(q);
+
+            var o = dc.ExecuteSql(q);
+
+            return o;
         }
 
         // GET: api/Teachers
-        public IQueryable<Teacher> GetTeachers()
+        public object GetRooms()
         {
-            getXQuery(null);
+            return test(null);
 
-            //var f = db.GetForeignKeyProperties<Room>();
-
-            //var jim = db.GetType().GetProperties().Where(tc => tc.Name == "Rooms").Single();
-
-            //var r = jim.ReflectedType;
-            //var type = typeof r;
-
-            //var myint = 5;
-            //var myinttype = typeof(Int16);
-
-            //var f2 = db.GetForeignKeyProperties<r>();
-
-            //var s = DContext.GetTableName(typeof(Room), db);
-
-               // var blogNames = db.Database.SqlQuery<object>(
-                                   //"SELECT * FROM dbo.Rooms join dbo.Buildings on dbo.Rooms.BuildingId = dbo.Buildings.Id").ToList();
-
-            
-
-            //string sql = "SELECT * FROM dbo.Rooms join dbo.Buildings on dbo.Rooms.BuildingId = dbo.Buildings.Id";
-           // dynamic t;
-
-           //using (var connection = new SqlConnection(@"Data Source=.\SQLEXPRESS; Initial Catalog=D;User Id=sa;password=prosvasis;"))
-           //{
-            //    var orderDetail = connection.Query(sql).FirstOrDefault();
-
-                //t = Newtonsoft.Json.JsonConvert.SerializeObject(orderDetail);
-            //}
-
-
-
-            return db.Teachers.Include(b => b.Country);
-        }
-
-        // GET: api/Teachers/5
-        [ResponseType(typeof(Teacher))]
-        public async Task<IHttpActionResult> GetTeacher(int id)
-        {
-            Teacher teacher = await db.Teachers.FindAsync(id);
-            if (teacher == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(teacher);
-        }
-
-        // PUT: api/Teachers/5
-        [ResponseType(typeof(void))]
-        public async Task<IHttpActionResult> PutTeacher(int id, Teacher teacher)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            if (id != teacher.Id)
-            {
-                return BadRequest();
-            }
-
-            db.Entry(teacher).State = EntityState.Modified;
-
-            try
-            {
-                await db.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!TeacherExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return StatusCode(HttpStatusCode.NoContent);
-        }
-
-        // POST: api/Teachers
-        [ResponseType(typeof(Teacher))]
-        public async Task<IHttpActionResult> PostTeacher(Teacher teacher)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            db.Teachers.Add(teacher);
-            await db.SaveChangesAsync();
-
-            return CreatedAtRoute("DefaultApi", new { id = teacher.Id }, teacher);
-        }
-
-        // DELETE: api/Teachers/5
-        [ResponseType(typeof(Teacher))]
-        public async Task<IHttpActionResult> DeleteTeacher(int id)
-        {
-            Teacher teacher = await db.Teachers.FindAsync(id);
-            if (teacher == null)
-            {
-                return NotFound();
-            }
-
-            db.Teachers.Remove(teacher);
-            await db.SaveChangesAsync();
-
-            return Ok(teacher);
+            return null;
         }
 
         protected override void Dispose(bool disposing)
@@ -182,9 +72,9 @@ namespace D.Controllers
             base.Dispose(disposing);
         }
 
-        private bool TeacherExists(int id)
+        private bool RoomExists(int id)
         {
-            return db.Teachers.Count(e => e.Id == id) > 0;
+            return db.Rooms.Count(e => e.Id == id) > 0;
         }
     }
 }
